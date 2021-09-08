@@ -104,16 +104,16 @@ func CPUScoreHandler() {
 		cpuAVG := v.CPUAVG
 		scoreDataBefore := score.GetScoreData(vpsID)
 
-		log.Printf("正在统计VPSID：%d，CPU平均使用率：%.2f%%", vpsID, cpuAVG)
+		log.Printf("正在统计VPSID：%d，过去十五分钟CPU平均使用率：%.2f%%", vpsID, cpuAVG)
 
 		if cpuAVG >= float64(config.CPUUsageConfig.Check) && scoreDataBefore.Score > config.CPUScoreConfig.MinScore {
 			//过去十五分钟平均CPU使用率超过基准值，扣分
 			score.ChangeScore(vpsID, "-")
-			log.Printf("VPSID：%d，过去十五分钟平均CPU使用率：%.2f%%，扣分，当前积分：%d", vpsID, cpuAVG, scoreDataBefore.Score-1)
+			log.Printf("VPSID：%d，扣分，当前积分：%d", vpsID, scoreDataBefore.Score-1)
 		} else if cpuAVG < float64(config.CPUUsageConfig.Check) && scoreDataBefore.Score < config.CPUScoreConfig.MaxScore {
 			//过去十五分钟平均CPU使用率低于基准值，加分
 			score.ChangeScore(vpsID, "+")
-			log.Printf("VPSID：%d，过去十五分钟平均CPU使用率：%.2f%%，加分，当前积分：%d", vpsID, cpuAVG, scoreDataBefore.Score+1)
+			log.Printf("VPSID：%d，加分，当前积分：%d", vpsID, scoreDataBefore.Score+1)
 		}
 
 		//极值处理
