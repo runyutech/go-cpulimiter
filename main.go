@@ -1,11 +1,14 @@
 package main
 
 import (
+	"github.com/common-nighthawk/go-figure"
 	"go-cpulimiter/models"
 	"go-cpulimiter/pkg/config"
 )
 
 func init() {
+	myFigure := figure.NewFigure("rainyun.com", "slant", true)
+	myFigure.Print()
 
 	// 链接、构建SQLite数据库
 	models.Init()
