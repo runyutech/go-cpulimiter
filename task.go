@@ -104,7 +104,7 @@ func CPUScoreHandler() {
 		cpuAVG := v.CPUAVG
 		scoreDataBefore := score.GetScoreData(vpsID)
 
-		log.Printf("正在统计VPSID：%d，CPU平均使用率：%f", vpsID, cpuAVG)
+		log.Printf("正在统计VPSID：%d，CPU平均使用率：%.2f%%", vpsID, cpuAVG)
 
 		if cpuAVG >= float64(config.CPUUsageConfig.Check) && scoreDataBefore.Score > config.CPUScoreConfig.MinScore {
 			//过去十五分钟平均CPU使用率超过基准值，扣分
