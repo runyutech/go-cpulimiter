@@ -7,8 +7,7 @@ import (
 )
 
 func init() {
-	myFigure := figure.NewFigure("rainyun.com", "slant", true)
-	myFigure.Print()
+	figure.NewFigure("rainyun.com", "slant", true).Print()
 
 	// 链接、构建SQLite数据库
 	models.Init()
@@ -18,7 +17,6 @@ func init() {
 
 	// 初始化任务的执行
 	InitTasks()
-
 }
 
 func main() {

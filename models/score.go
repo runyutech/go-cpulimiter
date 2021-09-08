@@ -1,17 +1,18 @@
 package models
 
 import (
+	"go-cpulimiter/pkg/config"
 	"log"
 )
 
 type Score struct {
 	VPSID uint
-	Score int `gorm:"default:1"`
+	Score int
 }
 
 func (score *Score) GetScoreData(vmid uint) *Score {
 	var nowData Score
-	DB.Where(Score{VPSID: vmid}).FirstOrCreate(&nowData)
+	DB.Where(Score{VPSID: vmid}).Attrs(Score{Score: config.CPUScoreConfig.MaxScore}).FirstOrCreate(&nowData)
 
 	return &nowData
 }

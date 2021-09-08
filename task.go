@@ -20,12 +20,12 @@ func InitTasks() {
 	}
 	log.Println("已设定CPU使用搜集器任务，一分钟后开始统计")
 
-	// 分数处理器，每五分钟运行一次
-	_, err = cron2.AddFunc("@hourly", CPUScoreHandler)
+	// 分数处理器，每十五分钟运行一次
+	_, err = cron2.AddFunc("@every 15m", CPUScoreHandler)
 	if err != nil {
 		return
 	}
-	log.Println("已设定CPU积分处理器搜集器任务，一小时后开始处理积分")
+	log.Println("已设定CPU积分处理器任务，十五分钟后开始处理积分")
 
 	// 启动任务
 	cron2.Start()
@@ -56,12 +56,12 @@ func CPUDataCollector() {
 			if status == 1 {
 				time.Sleep(1 * time.Second)
 
-				_, _, _, _, cputime2, err := LConnect.DomainGetInfo(d)
+				_, _, _, cpucount, cputime2, err := LConnect.DomainGetInfo(d)
 				if err != nil {
 					return
 				}
 
-				cputimepercent = 100 * (cputime2 - cputime1) / 1000000000
+				cputimepercent = 100 * (cputime2 - cputime1) / (1000000000 * uint64(cpucount))
 
 				//获取调度器参数列表
 				//parameters, _ := LConnect.DomainGetSchedulerParameters(d, 5)
@@ -76,7 +76,7 @@ func CPUDataCollector() {
 
 				//写入数据库
 				usage := models.Usage{}
-				usage.AddRecord(uint(d.ID), cputimepercent)
+				usage.AddRecord(uint(d.ID), cputimepercent, cpucount)
 
 				//打印数据
 				//log.Printf("正在读取：ID:%d, Name:%s, VCPU:%d, VCPU Usage:%d%% \n", d.ID, d.Name, cpucount, cputimepercent)
@@ -106,13 +106,13 @@ func CPUScoreHandler() {
 		log.Printf("正在统计VPSID：%d，CPU平均使用率：%f", vpsID, cpuAVG)
 
 		if cpuAVG >= float64(config.CPUUsageConfig.Check) && scoreDataBefore.Score > config.CPUScoreConfig.MinScore {
-			//过去一小时平均CPU使用率超过基准值，扣分
+			//过去十五分钟平均CPU使用率超过基准值，扣分
 			score.ChangeScore(vpsID, "-")
-			log.Printf("VPSID：%d，过去一小时平均CPU使用率：%.2f%%，扣分，当前积分：%d", vpsID, cpuAVG, scoreDataBefore.Score-1)
+			log.Printf("VPSID：%d，过去十五分钟平均CPU使用率：%.2f%%，扣分，当前积分：%d", vpsID, cpuAVG, scoreDataBefore.Score-1)
 		} else if cpuAVG < float64(config.CPUUsageConfig.Check) && scoreDataBefore.Score < config.CPUScoreConfig.MaxScore {
-			//过去一小时平均CPU使用率低于基准值，加分
+			//过去十五分钟平均CPU使用率低于基准值，加分
 			score.ChangeScore(vpsID, "+")
-			log.Printf("VPSID：%d，过去一小时平均CPU使用率：%.2f%%，加分，当前积分：%d", vpsID, cpuAVG, scoreDataBefore.Score+1)
+			log.Printf("VPSID：%d，过去十五分钟平均CPU使用率：%.2f%%，加分，当前积分：%d", vpsID, cpuAVG, scoreDataBefore.Score+1)
 		}
 
 		//极值处理
