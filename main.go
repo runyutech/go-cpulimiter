@@ -24,6 +24,9 @@ func main() {
 	// 连接到KVM
 	ConnectLibVirtKVM()
 
+	// 先搜集一次CPU数据
+	CPUDataCollector()
+
 	//退出时销毁Libvirt连接
 	defer DisconnectLibVirtKVM()
 	select {}
