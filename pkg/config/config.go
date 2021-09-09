@@ -2,8 +2,17 @@ package config
 
 import (
 	"github.com/go-ini/ini"
+	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
 )
+
+type App struct {
+	Driver string //驱动类型
+}
+
+var AppConfig = &App{}
 
 type CPUUsage struct {
 	Check   uint //CPU验证值
@@ -25,13 +34,35 @@ var cfg *ini.File
 // Init 初始化配置
 func Init() {
 	var err error
-	cfg, err = ini.Load("conf/app.ini")
+
+	//获取运行目录
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//判断与创建配置文件
+	if _, err := os.Stat(dir + "/config.ini"); os.IsNotExist(err) {
+		data, _ := ioutil.ReadFile("conf/config.ini")
+		err := ioutil.WriteFile(dir+"/config.ini", data, 0755)
+		if err != nil {
+			log.Fatalf("无法写入配置文件.")
+		}
+
+		log.Printf("已为您创建配置文件，请根据需求修改config.ini再重新运行程序")
+		os.Exit(0)
+	}
+
+	//读取配置文件
+	cfg, err = ini.Load("conf/config.ini")
 	if err != nil {
 		log.Fatalf("setting.Setup, fail to parse 'conf/app.ini': %v", err)
 	}
 
+	//映射配置到结构体
 	mapTo("usage", CPUUsageConfig)
 	mapTo("score", CPUScoreConfig)
+	mapTo("app", AppConfig)
 
 }
 

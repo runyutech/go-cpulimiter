@@ -5,20 +5,20 @@ import (
 )
 
 type Score struct {
-	VPSID uint
-	Score int
+	VPSName string
+	Score   int
 }
 
-func (score *Score) GetScoreData(vmid uint) *Score {
+func (score *Score) GetScoreData(vpsName string) *Score {
 	var nowData Score
-	DB.Where(Score{VPSID: vmid}).Attrs(Score{Score: config.CPUScoreConfig.MaxScore}).FirstOrCreate(&nowData)
+	DB.Where(Score{VPSName: vpsName}).Attrs(Score{Score: config.CPUScoreConfig.MaxScore}).FirstOrCreate(&nowData)
 
 	return &nowData
 }
 
-func (score *Score) ChangeScore(vmid uint, plusor string) {
+func (score *Score) ChangeScore(vpsName string, plusor string) {
 
-	scoreData := score.GetScoreData(vmid)
+	scoreData := score.GetScoreData(vpsName)
 
 	if plusor == "-" {
 		scoreData.Score--
@@ -28,5 +28,5 @@ func (score *Score) ChangeScore(vmid uint, plusor string) {
 		//log.Printf("已更新VMID %d，加分，目前：%d", vmid, scoreData.Score)
 	}
 
-	DB.Model(score).Where("vps_id = ?", vmid).Update("score", scoreData.Score)
+	DB.Model(score).Where("vps_name = ?", vpsName).Update("score", scoreData.Score)
 }

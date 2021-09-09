@@ -4,6 +4,7 @@ import (
 	"github.com/common-nighthawk/go-figure"
 	"go-cpulimiter/models"
 	"go-cpulimiter/pkg/config"
+	"go-cpulimiter/pkg/drivers"
 )
 
 func init() {
@@ -22,12 +23,14 @@ func init() {
 func main() {
 
 	// 连接到KVM
-	ConnectLibVirtKVM()
+	driver := drivers.Driver{}
+
+	driver.Connect()
 
 	// 先搜集一次CPU数据
-	CPUDataCollector()
+	driver.CPUDataCollector()
 
 	//退出时销毁Libvirt连接
-	defer DisconnectLibVirtKVM()
+	defer driver.Disconnect()
 	select {}
 }
