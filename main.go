@@ -10,11 +10,11 @@ import (
 func init() {
 	figure.NewFigure("rainyun.com", "slant", true).Print()
 
-	// 链接、构建SQLite数据库
-	models.Init()
-
 	// 初始化配置文件
 	config.Init()
+
+	// 链接、构建SQLite数据库
+	models.Init()
 
 	// 初始化任务的执行
 	InitTasks()
