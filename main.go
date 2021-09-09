@@ -5,10 +5,16 @@ import (
 	"go-cpulimiter/models"
 	"go-cpulimiter/pkg/config"
 	"go-cpulimiter/pkg/drivers"
+	"log"
 )
 
 func init() {
 	figure.NewFigure("rainyun.com", "slant", true).Print()
+	log.Println("=====================================")
+	log.Println("虚拟化平台CPU使用积分系统 v0.1")
+	log.Println("现已支持LibVirt-KVM / LXD")
+	log.Println("Powered by RainYun")
+	log.Println("=====================================")
 
 	// 初始化配置文件
 	config.Init()
