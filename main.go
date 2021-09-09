@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"github.com/common-nighthawk/go-figure"
 	"go-cpulimiter/models"
 	"go-cpulimiter/pkg/config"
@@ -8,16 +9,19 @@ import (
 	"log"
 )
 
+//go:embed conf/config.ini
+var ConfigFile []byte
+
 func init() {
 	figure.NewFigure("rainyun.com", "slant", true).Print()
 	log.Println("=====================================")
 	log.Println("虚拟化平台CPU使用积分系统 v0.1")
 	log.Println("现已支持LibVirt-KVM / LXD")
-	log.Println("Powered by RainYun")
+	log.Println("Powered by RainYun LLC")
 	log.Println("=====================================")
 
 	// 初始化配置文件
-	config.Init()
+	config.Init(ConfigFile)
 
 	// 链接、构建SQLite数据库
 	models.Init()

@@ -17,7 +17,7 @@ type LXDDriver struct{}
 // ConnectLXD 连接到LXD类型的主机
 func (thisDriver *LXDDriver) ConnectLXD() {
 
-	c, err := lxd.ConnectLXDUnix("", nil)
+	c, err := lxd.ConnectLXDUnix("/var/snap/lxd/common/lxd/unix.socket", nil)
 	if err != nil {
 		log.Fatalf("无法连接到本机LXD：%v", err)
 	}
@@ -82,6 +82,8 @@ func (thisDriver *LXDDriver) CollectLXDCPUData() {
 				//写入数据库
 				usage := models.Usage{}
 				usage.AddRecord(ct.Name, uint64(cputimepercent), uint16(cpucount))
+
+				log.Printf("正在读取：Name:%s, VCPU:%d, VCPU Usage:%d%% \n", ct.Name, cpucount, cputimepercent)
 
 			}
 		}(container)

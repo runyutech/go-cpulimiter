@@ -1,6 +1,7 @@
 package models
 
 import (
+	"log"
 	"time"
 )
 
@@ -24,7 +25,7 @@ func (usage *Usage) GetAllRecords() ([]UsageAvg, error) {
 
 func (usage *Usage) AddRecord(vpsName string, cpupercent uint64, cpucount uint16) {
 	DB.Create(&Usage{VPSName: vpsName, CPUNow: cpupercent, CreatedTime: time.Now(), CPUCount: cpucount})
-	//log.Printf("已创建记录，VMID：%d，CPU：%d%%", vmid, cpupercent)
+	log.Printf("已创建记录，VPSNAME：%s，CPU：%d%%", vpsName, cpupercent)
 }
 
 func (usage *Usage) ClearOldRecord() {

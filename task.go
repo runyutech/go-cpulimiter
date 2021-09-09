@@ -13,8 +13,8 @@ func InitTasks() {
 	cron2 := cron.New() //创建一个cron实例
 
 	// CPU使用搜集器，每分钟运行一次
-
-	_, err := cron2.AddFunc("@every 1m", drivers.Driver{}.CPUDataCollector)
+	driver := drivers.Driver{}
+	_, err := cron2.AddFunc("@every 1m", driver.CPUDataCollector)
 	if err != nil {
 		return
 	}
