@@ -66,8 +66,8 @@ func (thisDriver *LXDDriver) CollectLXDCPUData() {
 				if err != nil {
 					log.Fatalf("无法获取VPS信息: %v", err)
 				}
-				time.Sleep(1 * time.Second)
 				cputime1 := state.CPU.Usage
+				time.Sleep(1 * time.Second)
 
 				state, _, err = LXDConnect.GetContainerState(ct.Name)
 				if err != nil {
@@ -83,7 +83,7 @@ func (thisDriver *LXDDriver) CollectLXDCPUData() {
 				usage := models.Usage{}
 				usage.AddRecord(ct.Name, uint64(cputimepercent), uint16(cpucount))
 
-				log.Printf("正在读取：Name:%s, VCPU:%d, VCPU Usage:%d%% \n", ct.Name, cpucount, cputimepercent)
+				//log.Printf("正在读取：Name:%s, VCPU:%d, VCPU Usage:%d%% \n", ct.Name, cpucount, cputimepercent)
 
 			}
 		}(container)
