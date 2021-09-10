@@ -46,7 +46,7 @@ func (thisDriver *LXDDriver) ChangeLXDLimit(vpsName string, percent uint) {
 func (thisDriver *LXDDriver) CollectLXDCPUData() {
 
 	log.Printf("正在搜集所有运行中的VPS的CPU使用率数据..")
-	//列出所有Domain
+
 	full, err := LXDConnect.GetContainers()
 	if err != nil {
 		log.Fatalf("无法获取VPS信息: %v", err)
@@ -55,12 +55,12 @@ func (thisDriver *LXDDriver) CollectLXDCPUData() {
 	var totalcount uint
 
 	for _, container := range full {
-		totalcount++
 		go func(ct api.Container) {
 			//获取基本信息
 			var cputimepercent int64
 
 			if ct.StatusCode == 103 {
+				totalcount++
 
 				state, _, err := LXDConnect.GetContainerState(ct.Name)
 				if err != nil {

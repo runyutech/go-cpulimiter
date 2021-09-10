@@ -61,7 +61,7 @@ func (thisDriver *LibvirtKVMDriver) CollectLibvierKVMCPUData() {
 	var totalcount uint
 
 	for _, domain := range domains {
-		totalcount++
+
 		go func(d libvirt.Domain) {
 			//获取Domain基本信息
 			var cputimepercent uint64
@@ -71,6 +71,7 @@ func (thisDriver *LibvirtKVMDriver) CollectLibvierKVMCPUData() {
 				return
 			}
 			if status == 1 {
+				totalcount++
 				time.Sleep(1 * time.Second)
 
 				_, _, _, cpucount, cputime2, err := LConnect.DomainGetInfo(d)
