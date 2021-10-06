@@ -46,6 +46,7 @@ func CPUScoreHandler() {
 	for _, v := range usageData {
 		vpsName := v.VPSName
 		cpuAVG := v.CPUAVG
+		cpuCount := v.CPUCount
 		scoreDataBefore := score.GetScoreData(vpsName)
 
 		log.Printf("正在统计VPS：%s，过去十五分钟CPU平均使用率：%.2f%%", vpsName, cpuAVG)
@@ -64,11 +65,11 @@ func CPUScoreHandler() {
 		scoreDataNow := score.GetScoreData(vpsName)
 		if scoreDataNow.Score <= 0 && scoreDataBefore.Score > 0 {
 			//如果被扣到0分了，调用接口限制其CPU使用率
-			driver.ChangeLimit(vpsName, config.CPUUsageConfig.Limited)
+			driver.ChangeLimit(vpsName, config.CPUUsageConfig.Limited, int(cpuCount))
 			log.Printf("VPSID：%s，积分已归零，正在限制其CPU限制至：%d%%", vpsName, config.CPUUsageConfig.Limited)
 		} else if scoreDataNow.Score > 0 && scoreDataBefore.Score <= 0 {
 			//如果分数回到0以上，调用接口恢复其CPU使用率
-			driver.ChangeLimit(vpsName, config.CPUUsageConfig.Normal)
+			driver.ChangeLimit(vpsName, config.CPUUsageConfig.Normal, int(cpuCount))
 			log.Printf("VPSID：%s，积分已恢复，正在恢复其CPU限制至：%d%%", vpsName, config.CPUUsageConfig.Normal)
 		}
 

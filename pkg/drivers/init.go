@@ -37,11 +37,11 @@ func (d *Driver) CPUDataCollector() {
 	}
 }
 
-func (d *Driver) ChangeLimit(vpsName string, percent uint) {
+func (d *Driver) ChangeLimit(vpsName string, percent uint, cpuCount int) {
 	driverConfig := config.AppConfig.Driver
 	if driverConfig == "libvirt-kvm" {
 		drivernow := LibvirtKVMDriver{}
-		drivernow.ChangeLibvierKVMLimit(vpsName, percent)
+		drivernow.ChangeLibvierKVMLimit(vpsName, percent, cpuCount)
 	} else if driverConfig == "lxd" {
 		drivernow := LXDDriver{}
 		drivernow.ChangeLXDLimit(vpsName, percent)
