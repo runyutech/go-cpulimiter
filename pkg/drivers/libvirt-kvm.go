@@ -39,10 +39,10 @@ func (thisDriver *LibvirtKVMDriver) DisconnectLibvirtKVM() {
 // ChangeLibvierKVMLimit 调整Libvirt-KVM类型的主机的限制
 func (thisDriver *LibvirtKVMDriver) ChangeLibvierKVMLimit(vpsName string, percent uint, cpuCount int) {
 
-	quota := strconv.Itoa(int(percent * 10000))
-	quotaGlobal := strconv.Itoa(int(percent*10000) * cpuCount)
+	quota := strconv.Itoa(int(percent * 1000))
+	quotaGlobal := strconv.Itoa(int(percent*1000) * cpuCount)
 
-	cmd := exec.Command("/bin/sh", "-c", "virsh schedinfo --live --set vcpu_period=100000 "+vpsName+" && virsh schedinfo --live --set vcpu_quota="+quota+" "+vpsName+" && virsh schedinfo --live --set global_period=100000 "+vpsName+" && virsh schedinfo --live --set global_quota="+quotaGlobal+" "+vpsName)
+	cmd := exec.Command("/bin/sh", "-c", "virsh schedinfo --live --set vcpu_period=100000 "+vpsName+" --config && virsh schedinfo --live --set vcpu_quota="+quota+" "+vpsName+" --config && virsh schedinfo --live --set global_period=100000 "+vpsName+" --config && virsh schedinfo --live --set global_quota="+quotaGlobal+" "+vpsName+" --config")
 
 	err := cmd.Run()
 	if err != nil {
