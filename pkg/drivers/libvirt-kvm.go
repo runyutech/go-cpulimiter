@@ -42,13 +42,11 @@ func (thisDriver *LibvirtKVMDriver) ChangeLibvierKVMLimit(vpsName string, percen
 	quota := strconv.Itoa(int(percent * 1000))
 	quotaGlobal := strconv.Itoa(int(percent*1000) * cpuCount)
 
-	command := "virsh schedinfo --live --set vcpu_period=100000 " + vpsName + " --config; virsh schedinfo --live --set vcpu_quota=" + quota + " " + vpsName + " --config; virsh schedinfo --live --set global_period=100000 " + vpsName + " --config; virsh schedinfo --live --set global_quota=" + quotaGlobal + " " + vpsName + " --config"
+	command := "virsh schedinfo --live --set global_period=100000 " + vpsName + " --config; virsh schedinfo --live --set global_quota=" + quotaGlobal + " " + vpsName + " --config; virsh schedinfo --live --set vcpu_period=100000 " + vpsName + " --config; virsh schedinfo --live --set vcpu_quota=" + quota + " " + vpsName + " --config;"
 	log.Printf("正在执行限制命令：" + command)
 	cmd := exec.Command("/bin/sh", "-c", command)
 	err := cmd.Run()
-	// 打加强针
-	cmd = exec.Command("/bin/sh", "-c", command)
-	err = cmd.Run()
+
 	if err != nil {
 		log.Fatalf("在调整VPS的CPU限制时出现错误：%s", err)
 	}
