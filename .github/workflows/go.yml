@@ -22,7 +22,7 @@ jobs:
         go-version: '1.20'
 
     - name: Build
-      run: go build -v ./... -o go-cpulimiter
+      run: go build -o go-cpulimiter -v ./...
 
     - name: Upload Release
       uses: ncipollo/release-action@v1.12.0
