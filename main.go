@@ -15,7 +15,7 @@ var ConfigFile []byte
 func init() {
 	figure.NewFigure("rainyun.com", "slant", true).Print()
 	log.Println("=====================================")
-	log.Println("虚拟化平台CPU使用积分系统 v0.1")
+	log.Println("虚拟化平台CPU使用积分系统 v0.2")
 	log.Println("现已支持LibVirt-KVM / LXD")
 	log.Println("Powered by RainYun LLC")
 	log.Println("=====================================")
